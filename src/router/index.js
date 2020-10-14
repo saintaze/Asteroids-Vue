@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Asteriods from '@/components/Asteriods.vue';
+import AsteriodsList from '@/components/AsteriodsList.vue';
 import SearchAsteriods from '@/components/SearchAsteriods.vue';
 
 
@@ -13,7 +13,7 @@ const routes = [
   },
   {
     path: '/asteriods',
-    component: Asteriods
+    component: AsteriodsList
   },
   {
     path: '/search',

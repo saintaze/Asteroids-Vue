@@ -1,7 +1,7 @@
 <template>
   <div class="asteroid">
 
-    <div class="asteroid__head" :style="{'background-image': 'url(' + require(`@/assets/a-${index}.jpg`) + ')'}">
+    <div class="asteroid__head" :style="{'background-image': 'url(' + require(`@/assets/a-${index % 12}.jpg`) + ')'}">
         <div class="asteroid__img-box">
           <div class="asteroid__title">
             <a :href="asteroid.nasa_jpl_url" target="_blank" class="asteroid__name">{{asteroid.name}}</a>
@@ -151,7 +151,14 @@ export default {
   }
 
   &__id {
+    width: fit-content;
     color: cornsilk;
+    font-style: italic;
+    font-weight: 500;
+    // -webkit-text-fill-color: transparent;
+    // -webkit-background-clip: text;
+  background-color: orange;
+  mix-blend-mode: hard-light;
   }
 
   &__field {

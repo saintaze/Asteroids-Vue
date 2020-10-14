@@ -15,7 +15,7 @@
 <script>
 import axios from 'axios';
 import {API_ENDPOINT_ASTEROIDS} from '@/constants';
-import data from '@/data';
+import {listData} from '@/data';
 import Asteroid from '@/components/Asteroid';
 
 export default {
@@ -26,7 +26,7 @@ export default {
   data(){
     return {
       asteriods: [],
-      data: data
+      data: listData
     }
   },
   async created() {

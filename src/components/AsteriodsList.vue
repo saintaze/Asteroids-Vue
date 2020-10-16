@@ -2,7 +2,12 @@
   <div class="asteroids">
     <!-- <img src="@/assets/a-1.jpg" /> -->
     <!-- <img :src="require('@/assets/a-1.jpg')" /> -->
-    <h1 class="asteroids__heading">Asteroids <router-link class="asteroids__search" to="/search">Search</router-link></h1>
+    <button class="asteroids__logout" @click="logout">Logout</button>
+    <router-link to="/likes">Likes</router-link>
+    <h1 class="asteroids__heading">
+      Asteroids 
+      <router-link class="asteroids__search" to="/search">Search</router-link>
+    </h1>
     <div class="asteroids__center">
 
       <asteroid v-for="(asteroid, index) in data" :key="asteroid.id" :asteroid="asteroid" :index="index"/>
@@ -17,6 +22,11 @@ import axios from 'axios';
 import {API_ENDPOINT_ASTEROIDS} from '@/constants';
 import {listData} from '@/data';
 import Asteroid from '@/components/Asteroid';
+
+
+import * as firebase from 'firebase/app';
+import 'firebase/auth';
+
 
 export default {
   name: 'asteriods',
@@ -38,6 +48,15 @@ export default {
       const {data} = await axios.get(API_ENDPOINT_ASTEROIDS);
       this.asteriods = data.near_earth_objects
       console.log(this.asteriods);
+    },
+    async logout(){
+      try {
+        await firebase.auth().signOut();
+        // this.$router.replace({name: 'asteroids'})
+        console.log('signedout')
+      } catch (e) {
+        console.log(e)
+      }
     }
     
   }

@@ -12,10 +12,21 @@
 
     <div class="asteroid__body">
       
-      <div class="asteroid__field">
+      <div class="asteroid__field asteroid__field--like">
+        <div class="asteroid__field-left">
+          <div class="asteroid__field-name">Dangerous</div>
+          <div class="asteroid__field-value">{{isDangerous(asteroid)}}</div>  
+        </div>
+        <div class="asteroid__field-right" v-if="isAuthenticated">
+          <i v-if="liked" class="fas fa-heart asteroid__like-icon" @click="toggleLike"></i>
+          <i v-else class="far fa-heart asteroid__like-icon" @click="toggleLike"></i>
+        </div>
+      </div>
+
+      <!-- <div class="asteroid__field asteroid__field--like">
         <div class="asteroid__field-name">Dangerous</div>
         <div class="asteroid__field-value">{{isDangerous(asteroid)}}</div>
-      </div>
+      </div> -->
 
       <div class="asteroid__field">
         <div class="asteroid__field-name">Diameter</div>
@@ -49,12 +60,25 @@
 
 <script>
 import moment from 'moment';
+import {auth, likesCollection} from '@/firebaseInit';
 
 export default {
   name: 'asteriod',
   props:{
     asteroid: Object,
-    index: Number
+    index: Number,
+    liked: Boolean
+  },
+  data(){
+    return {
+      liked: this.liked,
+      lastDebounceTimer: null,
+    }
+  },
+  computed: {
+    isAuthenticated(){
+      return !!auth.currentUser;
+    }
   },
   methods: {
     isDangerous(asteroid){
@@ -75,24 +99,47 @@ export default {
     },
     getOrbitalPeriod(asteroid){
       return (asteroid.orbital_data.orbital_period / 365).toFixed(2);
+    },
+    async toggleLike(){
+      console.log(this.liked)
+      this.liked = !this.liked;
+
+      if(this.liked){
+        //add
+        const payload = {
+          userId: auth.currentUser.uid,
+          asteroid: this.asteroid
+        }
+        await likesCollection.add(payload);
+      }else{
+        //delete
+        var asteroids = await likesCollection.where('asteroid.id','==', this.asteroid.id).get();
+        asteroids.forEach(a => a.ref.delete());
+      }
+
+    },
+    debounceLike(wait=3000){
+      if(this.lastDebounceTimer) clearTimeout(this.lastDebounceTimer);
+      this.lastDebounceTimer = setTimeout(()=>{
+        //logic
+      }, wait)
     }
   }
 }
 </script>
-
 
 <style lang="scss">
 
 .asteroid {
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   
-  cursor: pointer;
+  // cursor: pointer;
   transition: all .3s ease-in-out;
 
-  &:hover {
-    box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
-    transform: scale(1.02);
-  }
+  // &:hover {
+  //   box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+  //   transform: scale(1.02);
+  // }
 
 
   &__head{
@@ -167,6 +214,22 @@ export default {
       margin-bottom: .6rem;
 
     // }
+
+    &--like {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  &__like-icon {
+    // color: red;
+    // color: #f25c32;
+    font-size: 1.7rem;
+    cursor: pointer;
+    &:hover{
+      transform-origin: all .3s;
+      // color: #888;
+    }
   }
 
   &__field-name {

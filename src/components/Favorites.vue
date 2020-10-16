@@ -1,6 +1,6 @@
 <template>
-  <div class="likes">
-    <div class="likes__center">
+  <div class="favorites">
+    <div class="favorites__center">
 
       <asteroid 
         v-for="(asteroid, index) in data" 
@@ -14,10 +14,10 @@
 
 <script>
 import Asteroid from '@/components/Asteroid';
-import {getLikedAsteroids} from '@/firebaseService';
+import {getfavoriteAsteroids} from '@/firebaseService';
 
 export default {
-  name: 'likes',
+  name: 'favorites',
   components: {
     Asteroid
   },
@@ -27,7 +27,7 @@ export default {
     }
   },
   async created(){
-    this.data = await getLikedAsteroids();
+    this.data = await getfavoriteAsteroids();
   }
 }
 </script>

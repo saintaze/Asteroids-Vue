@@ -2,11 +2,8 @@
   <div class="asteroids">
     <!-- <img src="@/assets/a-1.jpg" /> -->
     <!-- <img :src="require('@/assets/a-1.jpg')" /> -->
-    <button class="asteroids__logout" @click="logout">Logout</button>
-    <router-link to="/likes">Likes</router-link>
     <h1 class="asteroids__heading">
       Asteroids 
-      <router-link class="asteroids__search" to="/search">Search</router-link>
     </h1>
     <div class="asteroids__center">
 
@@ -19,13 +16,10 @@
 
 <script>
 import axios from 'axios';
-import {API_ENDPOINT_ASTEROIDS} from '@/constants';
+import {API_ENDPOINT_ASTEROIDS, COLORS} from '@/constants';
 import {listData} from '@/data';
 import Asteroid from '@/components/Asteroid';
-
-
-import * as firebase from 'firebase/app';
-import 'firebase/auth';
+import {emitNavColor} from '@/utils';
 
 
 export default {
@@ -40,6 +34,8 @@ export default {
     }
   },
   async created() {
+    emitNavColor('setNavColor',COLORS.ASTEROIDS, this);
+
     // this.initializeAsteriods();
     console.log(data);
   }, 

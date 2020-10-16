@@ -4,8 +4,8 @@ import AsteriodsList from '@/components/AsteriodsList.vue';
 import SearchAsteriods from '@/components/SearchAsteriods.vue';
 import Signin from '@/components/Signin.vue';
 import Signup from '@/components/Signup.vue';
-import Likes from '@/components/Likes.vue';
-
+import Favorites from '@/components/Favorites.vue';
+import FindAsteroid from '@/components/FindAsteroid.vue';
 
 Vue.use(VueRouter)
 
@@ -27,6 +27,11 @@ const routes = [
     name: 'search'
   },
   {
+    path: '/find',
+    component: FindAsteroid,
+    name: 'find'
+  },
+  {
     path: '/signin',
     component: Signin,
     name: 'signin'
@@ -37,9 +42,9 @@ const routes = [
     name: 'signup'
   },
   {
-    path: '/likes',
-    component: Likes,
-    name: 'likes',
+    path: '/favorites',
+    component: Favorites,
+    name: 'favorites',
     meta: {
       requiresAuth: true
     }

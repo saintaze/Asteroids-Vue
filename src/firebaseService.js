@@ -1,4 +1,4 @@
-import {auth, db, likesCollection} from '@/firebaseInit';
+import {auth, favoritesCollection} from '@/firebaseInit';
 
 export const signup = async ({email, password}) => {
   try {
@@ -19,7 +19,7 @@ export const signin = async ({email, password}) => {
 }
 
 export const signout = async () => {
-
+  await auth.signOut();
 }
 
 export const getUserId = () => {
@@ -27,6 +27,7 @@ export const getUserId = () => {
 }
 
 export const isLoggedIn = () => {
+  console.log('loggedin', !!auth.currentUser)
   return !!auth.currentUser;
 }
 
@@ -38,12 +39,12 @@ export const unlikeAsteroid = async () => {
 
 }
 
-export const getLikedAsteroids = async () => {
+export const getfavoritedAsteroids = async () => {
   const userId = getUserId();
-  const likedAsteroids = [];
-  const asteroidsSnapshot = await likesCollection.where('userId', '==', userId).get();
-  asteroidsSnapshot.forEach(a => {
-    likedAsteroids.push(a.data().asteroid);
+  const favoriteAsteroids = [];
+  const favoritesSnapshot = await favoritesCollection.where('userId', '==', userId).get();
+  favoritesSnapshot.forEach(a => {
+    favoriteAsteroids.push(a.data().asteroid);
   });
-  return likedAsteroids;
+  return favoriteAsteroids;
 }

@@ -1,12 +1,34 @@
 <template>
   <div class="app">
+    <site-nav :navColor="navColor" />
     <!-- <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div> -->
-    <router-view/>
+    <router-view @setNavColor="setNavColor"/>
   </div>
 </template>
+
+<script>
+import SiteNav from '@/components/SiteNav';
+
+export default {
+  name: 'app',
+  components : {
+    SiteNav
+  },
+  data(){
+    return {
+      navColor: 'black'
+    }
+  },
+  methods: {
+    setNavColor(color){
+      this.navColor = color
+    }
+  }
+}
+</script>
 
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800&display=swap');

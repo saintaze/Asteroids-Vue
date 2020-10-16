@@ -1,6 +1,6 @@
 <template>
   <div class="search">
-    <h1 class="search__heading">Search Asteroid <router-link class="asteroids__search" to="/search">Search</router-link></h1>
+    <h1 class="search__heading">Search Asteroid</h1>
 
     <div class="search__date-box">
       <input class="search__date-input" type="text" v-model="startDate" placeholder="Start Date" @click="markDateInput" @focus="markDateInput">
@@ -22,11 +22,13 @@
 </template>
 
 <script>
-import {API_ENDPOINT__ASTEROIDS_DATE} from '@/constants';
+import {API_ENDPOINT__ASTEROIDS_DATE, COLORS} from '@/constants';
 import axios from 'axios';
 import moment from 'moment';
 import {searchData} from '@/data';
 import Asteroid from '@/components/Asteroid';
+import {emitNavColor} from '@/utils';
+
 
 export default {
   name: 'search-asteriods',
@@ -49,6 +51,9 @@ export default {
     dateFormat(dateStr) {
       return moment(dateStr).format("MMM Do, YYYY");
     }
+  },
+  created(){
+    emitNavColor('setNavColor',COLORS.SEARCH, this);
   },
   methods: {
     markDateInput(e){

@@ -15,4 +15,4 @@ export const db = firebase.firestore();
 export const auth = firebase.auth();
 
 
-export const likesCollection = db.collection('likes');
+export const likesCollection = db.collection('favorites');

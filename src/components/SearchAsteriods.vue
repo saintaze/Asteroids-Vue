@@ -120,6 +120,7 @@ export default {
     place-items: center;
     font-weight: 500;
     font-style: italic;
+    text-shadow: 0px 1px 2px rgba(0,0,0, .1);
   }
 
   &__loading {
@@ -173,6 +174,7 @@ export default {
 
   &__date-input, &__btn {
     box-shadow: 0px 2px 4px rgba(0,0,0, .2);
+
   }
 
 

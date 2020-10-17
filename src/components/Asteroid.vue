@@ -17,7 +17,7 @@
           <div class="asteroid__field-name">Dangerous</div>
           <div class="asteroid__field-value">{{isDangerous(asteroid)}}</div>  
         </div>
-        <div class="asteroid__field-right" v-if="isAuthenticated">
+        <div class="asteroid__field-right" v-if="isLoggedIn">
           <i v-if="liked" class="fas fa-heart asteroid__like-icon" @click="toggleLike"></i>
           <i v-else class="far fa-heart asteroid__like-icon" @click="toggleLike"></i>
         </div>
@@ -38,7 +38,7 @@
         <div class="asteroid__field-value">{{getFirstObservedDate(asteroid)}}</div>
       </div>
 
-        <div class="asteroid__field">
+      <div class="asteroid__field">
         <div class="asteroid__field-name">Last Observed</div>
         <div class="asteroid__field-value">{{getLastObservedDate(asteroid)}}</div>
       </div>
@@ -62,13 +62,14 @@ export default {
   data(){
     return {
       liked: this.liked,
+      isLoggedIn: false,
       lastDebounceTimer: null,
     }
   },
-  computed: {
-    isAuthenticated(){
-      return !!auth.currentUser;
-    }
+  created(){
+    auth.onAuthStateChanged(user => {
+      this.isLoggedIn = !!user;
+    })
   },
   methods: {
     isDangerous(asteroid){
@@ -91,9 +92,7 @@ export default {
       return (asteroid.orbital_data.orbital_period / 365).toFixed(2);
     },
     async toggleLike(){
-      console.log(this.liked)
       this.liked = !this.liked;
-
       if(this.liked){
         //add
         const payload = {
@@ -103,10 +102,9 @@ export default {
         await favoritesCollection.add(payload);
       }else{
         //delete
-        var asteroids = await favoritesCollection.where('asteroid.id','==', this.asteroid.id).get();
+        const asteroids = await favoritesCollection.where('asteroid.id','==', this.asteroid.id).get();
         asteroids.forEach(a => a.ref.delete());
       }
-
     },
     debounceLike(wait=3000){
       if(this.lastDebounceTimer) clearTimeout(this.lastDebounceTimer);
@@ -122,29 +120,16 @@ export default {
 
 .asteroid {
   width: 35.4rem;
-  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-  transition: all .3s ease-in-out;
-  &:hover {
-     transform: perspective(1px) scale(1.02) translateZ(0);
-     backface-visibility: hidden;
-    -webkit-font-smoothing: subpixel-antialiased;
-//     box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
-  }
-
+  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
 
   &__head{
-    height: 27rem;
-
+    height: 27.5rem;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     position: relative;
     border-radius: 2px 2px 0 0;
     backface-visibility: hidden;
-    // background-color: skyblue;
-    // background-image: url('~@/assets/a-1.jpg');
-    // background-color: orange;
-    // background-blend-mode: multiply;
   }
 
   &__body{
@@ -167,7 +152,8 @@ export default {
     position: relative;
     margin-bottom: 1rem;
     text-decoration: none;
-    mix-blend-mode: hard-light;
+    display: block;
+    backface-visibility: hidden;
 
     &::after {
       position: absolute;
@@ -178,33 +164,28 @@ export default {
       width: 60%;
       bottom: -.1rem;
       left : 0;
-
     }
 
     &:hover {
       transition: all .3s;
+      font-size: 3.06rem;
       color: darken(white, 3);
     }
   }
 
   &__id {
     width: fit-content;
-    color: cornsilk;
+    color: snow;
     font-style: italic;
-    font-weight: 500;
-    // -webkit-text-fill-color: transparent;
-    // -webkit-background-clip: text;
-  background-color:blue;
-  mix-blend-mode: lighten;
+    font-weight: 400;
+    font-family: 'audiowide';
+    letter-spacing: 1px;
+    font-size: 1.48rem;
   }
 
   &__field {
-
-    // &:not(:last-child){
-      margin-bottom: .6rem;
-
-    // }
-
+    margin-bottom: .6rem;
+    
     &--like {
       display: flex;
       justify-content: space-between;
@@ -212,19 +193,18 @@ export default {
   }
 
   &__like-icon {
-    // color: red;
-    // color: #f25c32;
-    font-size: 1.7rem;
+    font-size: 1.71rem;
     cursor: pointer;
+    color: #474747;
+    
     &:hover{
       transform-origin: all .3s;
-      // color: #888;
+      color: #636363;
     }
   }
 
   &__field-name {
-    color: #4c4c4c;
-    // color: #ad404b;
+    color: #333;
     font-weight: 500;
     position: relative;
     display: inline-block;
@@ -245,10 +225,9 @@ export default {
   }
 
   &__field-value {
-    color: #fc6035;
-
+    color: #999;
     padding-left: 1.2rem;
-    font-size: 1.5rem;
+    font-size: 1.48rem;
   }
 
 }

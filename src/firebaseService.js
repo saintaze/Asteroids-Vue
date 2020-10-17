@@ -48,3 +48,16 @@ export const getfavoriteAsteroids = async () => {
   });
   return favoriteAsteroids;
 }
+
+export const onLiveFavoritesUpdate = (userId, component) => {
+  component.isLoading = true;
+  component.favoritesUnsubscribe = favoritesCollection.where("userId", "==", userId)
+    .onSnapshot(favoritesSnapshot => {
+      let updatedFavorites = [];
+      favoritesSnapshot.forEach(doc => {
+        updatedFavorites.push(doc.data().asteroid);
+      });
+      component.data = updatedFavorites;
+      component.isLoading = false;
+    });
+}

@@ -34,7 +34,7 @@ export default {
       asteroidId: null,
       data: {},
       errorMessage: '',
-      exampleMessage: 'eg. (322913, 2435730, 2435730)',
+      exampleMessage: 'eg. (2162038, 3729835, 2276274)',
       isLoading: false,
       isError: true,
     }
@@ -90,6 +90,8 @@ export default {
 
 .find {
   background-color: #ffdb64;
+  background-color: #6de15f;
+  
  
 
   &__center {
@@ -110,6 +112,7 @@ export default {
     place-items: center;
     font-weight: 500;
     font-style: italic;
+    text-shadow: 0px 1px 2px rgba(0,0,0, .1);
   }
 
   &__loading {
@@ -162,7 +165,7 @@ export default {
   }
 
   &__input, &__btn {
-    box-shadow: 0px 2px 4px rgba(0,0,0, .2);
+    box-shadow: 0px 2px 3px rgba(0,0,0, .2);
   }
 
   &__find-heading {

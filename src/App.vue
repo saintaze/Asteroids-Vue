@@ -1,10 +1,6 @@
 <template>
   <div class="app">
     <site-nav :navColor="navColor" />
-    <!-- <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div> -->
     <router-view @setNavColor="setNavColor"/>
   </div>
 </template>
@@ -19,21 +15,21 @@ export default {
   },
   data(){
     return {
-      navColor: 'black'
+      navColor: '#333'
     }
   },
   methods: {
     setNavColor(color){
-      this.navColor = color
+      this.navColor = color;
     }
   }
 }
 </script>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800&display=swap');
-
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Monoton&display=swap');
 
 * {
   padding: 0;
@@ -75,20 +71,79 @@ body {
   font-weight: normal;
 }
 
+.page {
+  padding: 0 0 9rem;
+  min-height: 100vh;
 
-.app {
-}
+  &__heading {
+    text-align: center;
+    font-family: 'Monoton', cursive;
+    color: white;
+    margin-bottom: 9rem;
+    font-size: 3.8rem;
+    position: relative;
+    line-height: 1;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    word-spacing: 1.2rem;
+  }
 
-#nav {
-  padding: 30px;
+  &__center {
+    max-width: 114rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 7rem 4rem;
+    margin: 0 auto;
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+    @media screen and (max-width: 1180px){
+      grid-template-columns: repeat(2, 1fr);
+      max-width: 75rem;
+    }
 
-    &.router-link-exact-active {
-      color: #42b983;
+    @media screen and (max-width: 800px){
+      grid-template-columns: repeat(1, 1fr);
+      max-width: 35rem;
     }
   }
 }
+
+@keyframes pulse {
+  0%{
+    transform: scale(.98) translate(-50%, -50%);
+  }
+  50%{
+    transform: scale(1) translate(-50%, -50%);
+  }
+  100%{
+    transform: scale(1.02) translate(-50%, -50%);
+  }
+}
+
+
+@keyframes wobble {
+  0% {
+    transform: translateX(0);
+  }
+  15% {
+    transform: translateX(0.375rem);
+  }
+  30% {
+    transform: translateX(-0.375rem);
+  }
+  45% {
+    transform: translateX(0.375rem);
+  }
+  60% {
+    transform: translateX(-0.375rem);
+  }
+  75% {
+    transform: translateX(0.375rem);
+  }
+  90% {
+    transform: translateX(-0.375rem);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
 </style>

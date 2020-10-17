@@ -23,22 +23,12 @@
         </div>
       </div>
 
-      <!-- <div class="asteroid__field asteroid__field--like">
-        <div class="asteroid__field-name">Dangerous</div>
-        <div class="asteroid__field-value">{{isDangerous(asteroid)}}</div>
-      </div> -->
-
       <div class="asteroid__field">
-        <div class="asteroid__field-name">Diameter</div>
+        <div class="asteroid__field-name">Average Diameter</div>
         <div class="asteroid__field-value">{{getDiameter(asteroid)}} km</div>
       </div>
 
-        <!-- <div class="asteroid__field">
-        <div class="asteroid__field-name">Absolute Magnitude</div>
-        <div class="asteroid__field-value">{{asteroid.absolute_magnitude_h}}</div>
-      </div> -->
-
-        <div class="asteroid__field">
+      <div class="asteroid__field">
         <div class="asteroid__field-name">Orbital Period</div>
         <div class="asteroid__field-value">{{getOrbitalPeriod(asteroid)}} years</div>
       </div>
@@ -48,10 +38,10 @@
         <div class="asteroid__field-value">{{getFirstObservedDate(asteroid)}}</div>
       </div>
 
-        <!-- <div class="asteroid__field">
+        <div class="asteroid__field">
         <div class="asteroid__field-name">Last Observed</div>
         <div class="asteroid__field-value">{{getLastObservedDate(asteroid)}}</div>
-      </div> -->
+      </div>
 
     </div>
 
@@ -60,7 +50,7 @@
 
 <script>
 import moment from 'moment';
-import {auth, likesCollection} from '@/firebaseInit';
+import {auth, favoritesCollection} from '@/firebaseInit';
 
 export default {
   name: 'asteriod',
@@ -110,10 +100,10 @@ export default {
           userId: auth.currentUser.uid,
           asteroid: this.asteroid
         }
-        await likesCollection.add(payload);
+        await favoritesCollection.add(payload);
       }else{
         //delete
-        var asteroids = await likesCollection.where('asteroid.id','==', this.asteroid.id).get();
+        var asteroids = await favoritesCollection.where('asteroid.id','==', this.asteroid.id).get();
         asteroids.forEach(a => a.ref.delete());
       }
 
@@ -131,15 +121,15 @@ export default {
 <style lang="scss">
 
 .asteroid {
+  width: 35.4rem;
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-  
-  // cursor: pointer;
   transition: all .3s ease-in-out;
-
-  // &:hover {
-  //   box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
-  //   transform: scale(1.02);
-  // }
+  &:hover {
+     transform: perspective(1px) scale(1.02) translateZ(0);
+     backface-visibility: hidden;
+    -webkit-font-smoothing: subpixel-antialiased;
+//     box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+  }
 
 
   &__head{
@@ -204,8 +194,8 @@ export default {
     font-weight: 500;
     // -webkit-text-fill-color: transparent;
     // -webkit-background-clip: text;
-  background-color: orange;
-  mix-blend-mode: hard-light;
+  background-color:blue;
+  mix-blend-mode: lighten;
   }
 
   &__field {

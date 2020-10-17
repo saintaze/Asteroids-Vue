@@ -1,4 +1,4 @@
-import {auth, favoritesCollection} from '@/firebaseInit';
+import { auth, favoritesCollection} from '@/firebaseInit';
 
 export const signup = async ({email, password}) => {
   try {
@@ -39,7 +39,7 @@ export const unlikeAsteroid = async () => {
 
 }
 
-export const getfavoritedAsteroids = async () => {
+export const getfavoriteAsteroids = async () => {
   const userId = getUserId();
   const favoriteAsteroids = [];
   const favoritesSnapshot = await favoritesCollection.where('userId', '==', userId).get();

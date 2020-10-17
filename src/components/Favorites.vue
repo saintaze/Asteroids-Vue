@@ -1,20 +1,22 @@
 <template>
-  <div class="favorites">
-    <div class="favorites__center">
-
+  <div class="favorites page">
+    <h1 class="page__heading">Favorites</h1>
+    <div class="page__center">
       <asteroid 
         v-for="(asteroid, index) in data" 
         :key="asteroid.id" :asteroid="asteroid" 
         :index="index" 
         liked  />
-
     </div>
   </div>
 </template>
 
 <script>
-import Asteroid from '@/components/Asteroid';
+import {COLORS} from '@/constants';
+import {emitNavColor} from '@/utils';
 import {getfavoriteAsteroids} from '@/firebaseService';
+
+import Asteroid from '@/components/Asteroid';
 
 export default {
   name: 'favorites',
@@ -27,33 +29,14 @@ export default {
     }
   },
   async created(){
+    emitNavColor('setNavColor',COLORS.FAVORITES, this);
     this.data = await getfavoriteAsteroids();
   }
 }
 </script>
 
 <style lang="scss">
-  .likes {
-    min-height: 100vh;
-    background-color: turquoise;
-
-    &__center {
-      // max-width: 35rem;
-      max-width: 114rem;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-gap: 7rem 4rem;
-      margin: 0 auto;
-
-      @media screen and (max-width: 1180px){
-        grid-template-columns: repeat(2, 1fr);
-        max-width: 75rem;
-      }
-
-      @media screen and (max-width: 800px){
-        grid-template-columns: repeat(1, 1fr);
-        max-width: 35rem;
-      }
-    }
-  }
+.favorites {
+  background-color: #35a0fc;
+}
 </style>

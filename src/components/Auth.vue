@@ -1,14 +1,15 @@
 <template>
-  <div class="signup">
-    <div class="signup__center">
+  <div class="auth">
+    <div class="auth__center">
       <form class="form" @submit.prevent="formSubmit">
         <div class="form__header">
           <img
-            src="@/assets/s-2.png"
+            src="@/assets/s-6.png"
             alt="logo"
             class="form__logo"
           />
-          <h2 class="form__heading">Sign In</h2>
+          <h2 class="form__heading" v-if="isSigninForm">Sign In</h2>
+          <h2 class="form__heading" v-else>Sign Up</h2>
         </div>
 
         <!-- Email -->
@@ -58,14 +59,22 @@
         </div>
 
         <div class="form__auth">
-          <a href="#" class="form__link">Create an account</a>
-          <input class="form__submit" type="submit" value="SignIn" />
+          <span v-if="isSigninForm" class="form__auth-type">
+            New to Explore? 
+            <span class="form__auth-type-link" @click="setFormType('signup')">Sign Up</span>
+          </span>
+          <span v-else class="form__auth-type">
+            Already have an account?
+            <span class="form__auth-type-link" @click="setFormType('signin')">Sign In</span>
+          </span>
+          <input class="form__submit" type="submit" value="Sign In" v-if="isSigninForm"/>
+          <input class="form__submit" type="submit" value="Sign Up" v-else />
          
         </div>
       </form>
 
-      <div class="form__info">
-        Ayaz Ahmed -> Calm Island Limited. Test v0.01a.
+      <div class="form__error">
+        <!-- Ayaz Ahmed -> Calm Island Limited. Test v0.01a. -->
       </div>
     </div>
   </div>
@@ -74,16 +83,15 @@
 <script>
 
 import { required, email, minLength } from "vuelidate/lib/validators";
-import axios from "axios";
-import {signin} from '@/firebaseService';
+import {signin, signup} from '@/firebaseService';
+import {emitNavColor} from '@/utils';
+import {COLORS} from '@/constants';
 
-import * as firebase from 'firebase/app';
-import 'firebase/auth';
 
 export default {
-  name: "signin",
+  name: "auth",
   data: () => ({
-    formSubmitSuccess: false,
+    formType: 'signin',
     data: {
       email: "",
       password: "",
@@ -101,12 +109,30 @@ export default {
       },
     },
   },
+  computed: {
+    isSigninForm(){
+      return this.formType === 'signin';
+    }
+  },
+  watch:{
+    $route(to, from){
+      this.formType = to.params.type;
+    }
+  },
+  created(){
+   this.formType = this.$router.currentRoute.params.type;
+   emitNavColor('setNavColor', COLORS.AUTH, this);
+  },
   methods: {
     async formSubmit() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
-        signin(this.data);
-        this.$router.replace({name: 'asteroids'})
+        if(this.isSigninForm){
+          signin(this.data);
+        }else{
+          signup(this.data);
+        }
+        this.$router.push({name: 'asteroids'});
       }
     },
     validatePassword(value) {
@@ -115,17 +141,22 @@ export default {
     validateEmail(value) {
       this.$v.data.email.$touch();
     },
+    setFormType(type){
+      this.formType = type;
+      this.$router.replace({path: `/auth/${this.formType}`});
+    }
   },
 };
 </script>
 
 
-
 <style lang="scss">
+
 // Variables
 $color-white: #fafafa;
-$color-grey-light-1: #ccc;
-$color-grey-light-2: #ededed;
+$color-grey-light-0: #d3d3d3;
+$color-grey-light-1: #cecece;
+$color-grey-light-2: #e7e7e7;
 $color-red-dark-1: #f04124;
 $color-red-light-1: salmon;
 $color-red-light-2: #f79483;
@@ -134,11 +165,11 @@ $color-grey-dark-1: #282426;
 $color-grey-dark-2: #505050;
 $color-blue-dark: #3546a1;
 
-// Signup Wrapper
-.signup {
-  background-color: #1de7fc !important;
-  min-height: 100vh;
-  padding: 9rem 0;
+// auth Wrapper
+.auth {
+  background-color: #881dfc;
+  background-color: #9c1dfc;
+  min-height: calc(100vh - 88px);
 
   &__center {
     background-color: white;
@@ -150,7 +181,7 @@ $color-blue-dark: #3546a1;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 
     @media (max-width: 500px) {
       padding: 2.6rem 2rem;
@@ -201,22 +232,25 @@ $color-blue-dark: #3546a1;
     &::placeholder {
       color: $color-grey-light-1;
       font-family: inherit;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
     }
   }
+
   &__icon {
     position: absolute;
     display: inline-block;
     right: 2rem;
     top: 1.8rem;
     font-size: 1.5rem;
-    color: $color-grey-light-1;
+    color: $color-grey-light-0;
   }
+
   &__errors {
     opacity: 0;
     margin-top: -1.7rem;
-    min-height: 2.6rem;
+    min-height: 2.4rem;
   }
+
   &__error {
     line-height: 1.4;
     height: 100%;
@@ -225,12 +259,14 @@ $color-blue-dark: #3546a1;
     font-size: 1.13rem;
     transition: all 2s ease-in-out;
   }
+
   &__auth {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 2rem;
+    margin: 2rem 0 1.8rem;
   }
+
   &__submit {
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -239,32 +275,34 @@ $color-blue-dark: #3546a1;
     font-size: 1.3rem;
     color: $color-white;
     height: 3.5rem;
-    padding: 0.7rem 1.6rem 0.8rem;
+    line-height: 3.5rem;
+    padding: 0 1.6rem;
     border: none;
     border-radius: 3.5px;
     outline: none;
     transition: all 0.2s ease-in-out;
-    background-color: $color-blue-dark;
+     background-color: darken(#5aa096, 6);
     &:hover {
-      background-color: lighten($color: $color-blue-dark, $amount: 11);
+      background-color: lighten(#5aa096, 1);
     }
   }
 
   &__header {
     display: flex;
     align-items: center;
-    margin: 2rem 0 3.9rem;
+    margin: 1.2rem 0 3.9rem;
   }
 
   &__heading {
-    font-weight: 500;
     color: $color-grey-dark-1;
     margin: 0;
+    font-family: 'audiowide';
+    font-weight: 300;
   }
 
   &__logo {
     width: 7rem;
-    margin-right: 0.5rem;
+    margin-right: .9rem;
   }
 
   &__link {
@@ -286,34 +324,23 @@ $color-blue-dark: #3546a1;
     font-size: 1.2rem;
     color: white;
   }
+
+  &__auth-type{
+    font-size: 1.2rem;
+  }
+
+  &__auth-type-link{
+    cursor: pointer;
+    color: #fc7143;
+    font-weight: 500;
+    font-size: 1.3rem;
+    display: block;
+
+    &:hover {
+      color: darken(#fc7143, 6);
+    }
+  }
 }
 
-// Animations
-@keyframes wobble {
-  0% {
-    transform: translateX(0);
-  }
-  15% {
-    transform: translateX(0.375rem);
-  }
-  30% {
-    transform: translateX(-0.375rem);
-  }
-  45% {
-    transform: translateX(0.375rem);
-  }
-  60% {
-    transform: translateX(-0.375rem);
-  }
-  75% {
-    transform: translateX(0.375rem);
-  }
-  90% {
-    transform: translateX(-0.375rem);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
 </style>
 

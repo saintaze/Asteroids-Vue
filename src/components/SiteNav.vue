@@ -11,20 +11,19 @@
         <router-link class="nav__link" :to="{name: 'find'}">Find</router-link>
       </li>
       <li class="nav__item">
-        <router-link class="nav__link" :to="{name: 'favorites'}">Favorites</router-link>
+        <router-link class="nav__link" :to="{name: 'favorites'}" v-if="isLoggedIn">Favorites</router-link>
       </li>
     </ul>
     <ul class="nav__right">
-      <li class="nav__item" >
-        <router-link class="nav__link" :to="{name: 'signup'}">Signup</router-link>
+      <li class="nav__item" v-if="!isLoggedIn">
+        <router-link class="nav__link" to="/auth/signup">Signup</router-link>
       </li>
       <li class="nav__item" v-if="isLoggedIn">
         <a @click="signout" class="nav__link">Signout</a>
       </li>
       <li class="nav__item" v-if="!isLoggedIn">
-        <router-link class="nav__link" :to="{name: 'signin'}">Signin</router-link>
+        <router-link class="nav__link" to="/auth/signin">Signin</router-link>
       </li>
-      
     </ul>
   </nav>
 </template>
@@ -45,7 +44,7 @@ export default {
   },
   created(){
     auth.onAuthStateChanged(user => {
-      this.isLoggedIn = !!user
+      this.isLoggedIn = !!user;
     })
   },
   methods: {
@@ -55,9 +54,6 @@ export default {
         this.$router.replace({name: 'asteroids'});
       }
       this.isLoggedIn = false;
-    },
-    checkAuthState(){
-      this.isLoggedIn = isLoggedIn();
     }
   }
 }
@@ -70,7 +66,11 @@ export default {
     justify-content: space-between;
 
     .router-link-active {
-      transform: scale(1.08);
+      backface-visibility: hidden;
+      transition: all .3s;
+      transform: translateX(-3px);
+      font-size: 1.42rem;
+      // transform: scale(1.08);
     }
 
     &__left, &__right {
@@ -78,27 +78,19 @@ export default {
        color: white; 
     } 
 
-    &__left {
-
-    }
-
-    &__right {
-
-    }
-
     &__item {
       display: block;
       margin-right: 1rem;
     }
 
     &__link {
-      // display: block;
       cursor: pointer;
-      text-decoration: none;
       display: inline-block;
       font-size: 1.3rem;
       color: white;
       font-family: 'Audiowide', cursive;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      transition: all .3s;
 
       &:hover {
         transition: all .3s;

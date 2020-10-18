@@ -21,7 +21,7 @@
       <li class="nav__item" v-if="isLoggedIn">
         <a @click="signout" class="nav__link">Signout</a>
       </li>
-      <li class="nav__item" v-if="!isLoggedIn">
+      <li class="nav__item" v-else>
         <router-link class="nav__link" to="/auth/signin">Signin</router-link>
       </li>
     </ul>
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import {signout, isLoggedIn} from '@/firebaseService';
+import fb from '@/firebaseService';
 import {auth} from '@/firebaseInit';
 
 export default {
@@ -39,17 +39,21 @@ export default {
   },
   data(){
     return {
-      isLoggedIn: false
+      isLoggedIn: false,
+      authUnsubscription: null
     }
   },
   created(){
-    auth.onAuthStateChanged(user => {
+    this.authUnsubscription = auth.onAuthStateChanged(user => {
       this.isLoggedIn = !!user;
-    })
+    });
+  },
+  beforeDestroy(){
+    this.authUnsubscription();
   },
   methods: {
     signout(){
-      signout();
+      fb.signout();
       if(!!this.$router.currentRoute.meta.requiresAuth){
         this.$router.replace({name: 'asteroids'});
       }
@@ -71,7 +75,6 @@ export default {
       transition: all .3s;
       transform: translateX(-3px);
       font-size: 1.42rem;
-      // transform: scale(1.08);
     }
 
     &__left, &__right {
@@ -95,7 +98,7 @@ export default {
 
       &:hover {
         transition: all .3s;
-        color: darken(white, 5);
+        color: darken(white, 4);
       }
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <div class="asteroid">
 
-    <div class="asteroid__head" :style="{'background-image': 'url(' + require(`@/assets/a-${index % 12}.jpg`) + ')'}">
+    <div class="asteroid__head" :style="{'background-image': 'url(' + require(`@/assets/a-${index % 15}.jpg`) + ')'}">
         <div class="asteroid__img-box">
           <div class="asteroid__title">
             <a :href="asteroid.nasa_jpl_url" target="_blank" class="asteroid__name">{{asteroid.name}}</a>
@@ -18,7 +18,7 @@
           <div class="asteroid__field-value">{{isDangerous(asteroid)}}</div>  
         </div>
         <div class="asteroid__field-right" v-if="isLoggedIn">
-          <i v-if="liked" class="fas fa-heart asteroid__like-icon" @click="toggleLike"></i>
+          <i v-if="isLiked" class="fas fa-heart asteroid__like-icon" @click="toggleLike"></i>
           <i v-else class="far fa-heart asteroid__like-icon" @click="toggleLike"></i>
         </div>
       </div>
@@ -50,7 +50,9 @@
 
 <script>
 import moment from 'moment';
+
 import {auth, favoritesCollection} from '@/firebaseInit';
+import fb from '@/firebaseService';
 
 export default {
   name: 'asteriod',
@@ -61,15 +63,25 @@ export default {
   },
   data(){
     return {
-      liked: this.liked,
+      isLiked: this.liked,
       isLoggedIn: false,
       lastDebounceTimer: null,
+      unSubcriptions: []
+    }
+  },
+  watch: {
+    liked(){
+      this.isLiked = this.liked;
     }
   },
   created(){
-    auth.onAuthStateChanged(user => {
+    const authUnsubscription = auth.onAuthStateChanged(user => {
       this.isLoggedIn = !!user;
-    })
+    });
+    this.unSubcriptions.push(authUnsubscription);
+  },
+  beforeDestroy(){
+    this.unSubcriptions.forEach(s => s());
   },
   methods: {
     isDangerous(asteroid){
@@ -92,21 +104,14 @@ export default {
       return (asteroid.orbital_data.orbital_period / 365).toFixed(2);
     },
     async toggleLike(){
-      this.liked = !this.liked;
-      if(this.liked){
-        //add
-        const payload = {
-          userId: auth.currentUser.uid,
-          asteroid: this.asteroid
-        }
-        await favoritesCollection.add(payload);
+      this.isLiked = !this.isLiked;
+      if(this.isLiked){
+        fb.likeAsteroid(this.asteroid);
       }else{
-        //delete
-        const asteroids = await favoritesCollection.where('asteroid.id','==', this.asteroid.id).get();
-        asteroids.forEach(a => a.ref.delete());
+        fb.unlikeAsteroid(this.asteroid.id);
       }
     },
-    debounceLike(wait=3000){
+    debounce(wait=3000){
       if(this.lastDebounceTimer) clearTimeout(this.lastDebounceTimer);
       this.lastDebounceTimer = setTimeout(()=>{
         //logic
@@ -220,7 +225,6 @@ export default {
       width: 100%;
       bottom: -.3rem;
       left : 0;
-
     }
   }
 

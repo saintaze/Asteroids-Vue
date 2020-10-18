@@ -73,8 +73,9 @@
         </div>
       </form>
 
-      <div class="form__error">
-        <!-- Ayaz Ahmed -> Calm Island Limited. Test v0.01a. -->
+      <div v-if="error" class="form__info">
+        <div>{{error.code}}</div>
+        <div>{{error.message}}</div>
       </div>
     </div>
   </div>
@@ -83,15 +84,16 @@
 <script>
 
 import { required, email, minLength } from "vuelidate/lib/validators";
-import {signin, signup} from '@/firebaseService';
 import {emitNavColor} from '@/utils';
 import {COLORS} from '@/constants';
+import fb from '@/firebaseService';
 
 
 export default {
   name: "auth",
   data: () => ({
     formType: 'signin',
+    error: null,
     data: {
       email: "",
       password: "",
@@ -120,19 +122,26 @@ export default {
     }
   },
   created(){
-   this.formType = this.$router.currentRoute.params.type;
    emitNavColor('setNavColor', COLORS.AUTH, this);
+   this.formType = this.$router.currentRoute.params.type;
   },
   methods: {
     async formSubmit() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
-        if(this.isSigninForm){
-          signin(this.data);
-        }else{
-          signup(this.data);
+        this.error = null;
+        try {
+          if(this.isSigninForm){
+            await fb.signin(this.data);
+          }else{
+            fb.signup(this.data);
+          }
+        }catch(e){
+          this.error = e; 
         }
-        this.$router.push({name: 'asteroids'});
+        if(!this.error){
+          this.$router.push({name: 'asteroids'});
+        }
       }
     },
     validatePassword(value) {
@@ -167,11 +176,14 @@ $color-blue-dark: #3546a1;
 
 // auth Wrapper
 .auth {
+  min-height: calc(100vh - 88px);
   background-color: #881dfc;
   background-color: #9c1dfc;
-  min-height: calc(100vh - 88px);
+  background-color: #ffdb64;
+  background-color: #ffe11a;
 
   &__center {
+    height: 40.6rem;
     background-color: white;
     width: 32rem;
     padding: 3rem;
@@ -281,9 +293,11 @@ $color-blue-dark: #3546a1;
     border-radius: 3.5px;
     outline: none;
     transition: all 0.2s ease-in-out;
-     background-color: darken(#5aa096, 6);
+    // background-color: darken(#5aa096, 6);
+    background-color: #334d5cfa;
+    
     &:hover {
-      background-color: lighten(#5aa096, 1);
+      background-color: lighten(#334d5cfa, 10);
     }
   }
 
@@ -318,7 +332,7 @@ $color-blue-dark: #3546a1;
   &__info {
     width: 100%;
     position: absolute;
-    bottom: -3rem;
+    bottom: -9rem;
     left: 0;
     text-align: center;
     font-size: 1.2rem;

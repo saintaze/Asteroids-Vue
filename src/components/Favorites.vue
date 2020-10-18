@@ -7,7 +7,7 @@
     <div v-else>
       <div class="page__center" v-if="data.length">
         <asteroid 
-          v-for="(asteroid, index) in data" 
+          v-for="(asteroid, index) in updatedFavorites" 
           :key="asteroid.id" :asteroid="asteroid" 
           :index="index" 
           liked  />
@@ -23,7 +23,6 @@
 <script>
 import {COLORS} from '@/constants';
 import {emitNavColor} from '@/utils';
-import {getfavoriteAsteroids, onLiveFavoritesUpdate, getUserId} from '@/firebaseService';
 
 import Asteroid from '@/components/Asteroid';
 
@@ -34,17 +33,33 @@ export default {
   },
   data(){
     return {
-      data: [],
-      isLoading: false
+      updatedFavorites: [],
+      isLoading: false,
+      unSubscriptions: []
     }
   },
   async created(){
     emitNavColor('setNavColor',COLORS.FAVORITES, this);
-    const userId = getUserId();
-    onLiveFavoritesUpdate(userId, this);
+    const authUnsubscription = auth.onAuthStateChanged(user => {
+      if(user) this.favoritesListener(user.uid);
+    });
+    this.unSubscriptions.push(authUnsubscription);
   },
   beforeDestroy(){
-    this.favoritesUnsubscribe()
+    this.unSubscriptions.forEach(s => s());
+  },
+  methods : {
+    favoritesListener(userId){
+      const favoritesUnsbscription = favoritesCollection.where("userId", "==", userId)
+        .onSnapshot(favoritesSnapshot => {
+          let updatedFavorites = [];
+          favoritesSnapshot.forEach(doc => {
+            updatedFavorites.push(doc.data().asteroid.id);
+          });
+          this.favorites = updatedFavorites;
+        });
+      this.unSubscriptions.push(favoritesUnsbscription);
+    }
   }
 }
 </script>

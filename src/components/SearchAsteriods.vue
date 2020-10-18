@@ -15,7 +15,12 @@
     <div class="search__list" v-for="(value, key) in data" :key="key">
       <h2 class="search__date-heading">{{key | formatDate}}</h2>
       <div class="page__center">
-        <asteroid v-for="(asteroid, index) in data[key]" :key="asteroid.id" :asteroid="asteroid" :index="index"/>
+        <asteroid 
+          v-for="(asteroid, index) in data[key]" 
+          :key="asteroid.id" 
+          :asteroid="asteroid" 
+          :index="index"
+          :liked="isFavoriteId(asteroid.id)" />
       </div>
     </div> 
   </div>
@@ -27,10 +32,9 @@ import moment from 'moment';
 
 import {API, COLORS} from '@/constants';
 import {emitNavColor} from '@/utils';
-import {searchData} from '@/data';
+import {favoritesCollection, auth} from '@/firebaseInit';
 
 import Asteroid from '@/components/Asteroid';
-
 
 export default {
   name: 'search-asteriods',
@@ -43,7 +47,9 @@ export default {
       endDate: '',
       data: {},
       errorMessage: '',
-      isLoading: false
+      isLoading: false,
+      favorites: [],
+      unSubscriptions: []
     }
   },
   filters: {
@@ -53,13 +59,20 @@ export default {
   },
   created(){
     emitNavColor('setNavColor',COLORS.SEARCH, this);
+    const authUnsubscription = auth.onAuthStateChanged(user => {
+      if(user) this.favoritesListener(user.uid);
+    });
+    this.unSubscriptions.push(authUnsubscription);
   },
+  beforeDestroy(){
+    this.unSubscriptions.forEach(s => s())
+  }, 
   methods: {
     markDateInput(e){
       e.target.type = 'date';
       this.errorMessage = '';
     },
-    clearDateFields(){
+    clearDateInput(){
       this.startDate = '';
       this.endDate = '';
     },
@@ -88,16 +101,29 @@ export default {
         this.setLoading(true);
         const {data} = await axios.get(`${API.ASTEROIDS_DATE_SEARCH}&${dateParams}`);
         this.data = data.near_earth_objects;
-        this.clearDateFields();
+        this.clearDateInput();
         if(!Object.keys(this.data).length){
           this.errorMessage = 'No Match! :(';
         }
-        console.log(data)
       }catch(e){
         this.errorMessage = e.response.data.error_message;
       }finally{
         this.setLoading(false);
       }
+    },
+    isFavoriteId(id){
+      return this.favorites.includes(id);
+    },
+    favoritesListener(userId){
+      const favoritesUnsbscription = favoritesCollection.where("userId", "==", userId)
+        .onSnapshot(favoritesSnapshot => {
+          let updatedFavorites = [];
+          favoritesSnapshot.forEach(doc => {
+            updatedFavorites.push(doc.data().asteroid.id);
+          });
+          this.favorites = updatedFavorites
+        });
+      this.unSubscriptions.push(favoritesUnsbscription);
     }
   }
 }
@@ -106,8 +132,8 @@ export default {
 <style lang="scss">
 
 .search {
-  background-color: #fc357e;
   background-color: #fc35a3;
+  // background-color: #fc35b6;
 
   &__messages {
     position: relative;
@@ -140,12 +166,14 @@ export default {
     border-radius: 2px;
     font-family: 'AUDIOWIDE';
     width: 21.8rem;
-    background-color: rgb(177, 227, 247);
+    background-color: #433e30;
+    border: 1px solid #555;
     color: white;
+    letter-spacing: .2px;
 
     &:hover {
       transition: all .2s;
-      background-color: darken(rgb(177, 227, 247), 5), ;
+      background-color: lighten(#555, 7) ;
     }
   }
 
@@ -162,37 +190,36 @@ export default {
     outline: none;
     border-radius: 2px;
     font-family: 'AUDIOWIDE';
-    color: #888;
+    color: #999;
     height: 5rem;
     font-size: 1.25rem;
-    max-width: 21.8rem;
+    width: 21.8rem;
+    font-weight: 100;
+    letter-spacing: .2px;
 
     &::placeholder{
-      color: #888;
+      color: #aaa;
+      font-weight: 100;
     }
   }
 
   &__date-input, &__btn {
     box-shadow: 0px 2px 4px rgba(0,0,0, .2);
-
   }
 
-
   &__date-heading {
+    margin: 5rem 0;     
     text-align: center;
     font-family: 'Monoton', cursive;
     color: white;
-    margin-bottom: 9rem;
-    font-size: 3.8rem;
+    font-size: 3.6rem;
     position: relative;
     line-height: 1;
     word-spacing: 1rem;
     text-shadow: 0px 1px 3px rgba(0,0,0, .2);
-  }
-
-  &__date-heading{
-    font-size: 3.4rem;
-    margin: 4rem;     
+    &:first-child{
+      margin-top: 4rem;
+    }
   }
 
 }

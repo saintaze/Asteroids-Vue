@@ -1,6 +1,6 @@
-import * as firebase from 'firebase/app'
-import 'firebase/auth'
-import 'firebase/firestore'
+import * as firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
 
 // Initialize Firebase
 firebase.initializeApp({
@@ -13,6 +13,4 @@ firebase.initializeApp({
 
 export const db = firebase.firestore();
 export const auth = firebase.auth();
-
-
 export const favoritesCollection = db.collection('favorites');

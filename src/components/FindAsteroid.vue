@@ -4,7 +4,7 @@
 
     <div class="find__box">
       <input class="find__input" v-model="asteroidId" type="text"  placeholder="Asteroid Id..." @click="clearError">
-      <button class="find__btn" @click="findAsteroid">find</button>
+      <button class="find__btn" @click="findAsteroid">Find</button>
       <div class="find__messages">
         <div class="find__error">{{errorMessage}}</div>
         <div class="find__loading" v-if="isLoading">Loading...!</div>
@@ -13,15 +13,18 @@
 
     <h2 class="search__date-heading">{{data.id}}</h2>
     <div class="find__center">
-      <asteroid :asteroid="data" :index="0" />
+      <asteroid :asteroid="data" :index="randomIndex" :liked="isFavoriteId(data.id)"/>
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+
 import {COLORS, API} from '@/constants';
 import {emitNavColor} from '@/utils';
+import {favoritesCollection, auth} from '@/firebaseInit';
+
 import Asteroid from '@/components/Asteroid';
 
 export default {
@@ -36,27 +39,40 @@ export default {
       errorMessage: '',
       exampleMessage: 'eg. (2162038, 3729835, 2276274)',
       isLoading: false,
-      isError: true,
+      isError: false,
+      favorites: [],
+      randomIndex: 0,
+      unSubscriptions: []
     }
   },
   async created() {
-    this.errorMessage = this.exampleMessage;
     emitNavColor('setNavColor', COLORS.FIND, this);
+    this.errorMessage = this.exampleMessage;
+    const authUnsubscription = auth.onAuthStateChanged(user => {
+      if(user) this.favoritesListener(user.uid);
+    });
+    this.unSubscriptions.push(authUnsubscription);
   },
+  beforeDestroy(){
+    this.unSubscriptions.forEach(s => s());
+  },
+  watch:{
+    data(){
+      this.randomIndex = this.randomizeIndex();
+    }
+  }, 
   methods: {
     async findAsteroid(){
-      if(!this.validateId()) return; 
+      if(!this.isValidId() || this.asteroidId === this.data.id) return; 
       try {
         this.isError = false;
         this.setLoading(true);
         const {data} = await axios.get(API.ASTEROID_FIND(this.asteroidId)); 
         this.data = data;
-        this.clearAsteroidIdField();
-        console.log(data);
+        this.clearAsteroidIdInput();
       }catch(e){
-        console.log(e.response);
         this.isError = true;
-        this.errorMessage = 'Asteroid with this Id doesnt not exist!';
+        this.errorMessage = 'Asteroid with this Id does not exist!';
       }finally{
          this.setLoading(false);
       }
@@ -66,20 +82,37 @@ export default {
       if(this.isLoading && !this.isError) this.errorMessage = '';
       if(!this.isLoading && !this.isError) this.errorMessage = this.exampleMessage;
     },
+    randomizeIndex(){
+      return Math.floor(Math.random() * 15);
+    },
     clearError(){
       this.errorMessage = '';
       this.errorMessage = this.exampleMessage;
     }, 
-    clearAsteroidIdField(){
+    clearAsteroidIdInput(){
       this.asteroidId = '';
     }, 
-    validateId(){
+    isValidId(){
       const isValid = /^\d{7}$/.test(this.asteroidId);
       if(!isValid){
         this.errorMessage = 'Asteroid Id can only be numbers, 7 digits long!';
         return false;
       }
       return true;
+    },
+    isFavoriteId(id){
+      return this.favorites.includes(id);
+    },
+    favoritesListener(userId){
+      const favoritesUnsbscription = favoritesCollection.where("userId", "==", userId)
+        .onSnapshot(favoritesSnapshot => {
+          let updatedFavorites = [];
+          favoritesSnapshot.forEach(doc => {
+            updatedFavorites.push(doc.data().asteroid.id);
+          });
+          this.favorites = updatedFavorites
+        });
+      this.unSubscriptions.push(favoritesUnsbscription);
     }
   }
 }
@@ -91,6 +124,9 @@ export default {
 .find {
   background-color: #ffdb64;
   background-color: #6de15f;
+  background-color: #95d973;
+  background-color: #95d973;
+  background-color: #bedb39;
   
  
 
@@ -132,12 +168,15 @@ export default {
     border-radius: 2px;
     font-family: 'AUDIOWIDE';
     width: 21.8rem;
-    background-color: rgb(177, 227, 247);
+    background-color: #433e30;
+    border: 1px solid #555;
     color: white;
+    letter-spacing: .2px;
+
 
     &:hover {
       transition: all .2s;
-      background-color: darken(rgb(177, 227, 247), 5), ;
+      background-color: lighten(#555, 7) ;
     }
   }
 
@@ -154,13 +193,14 @@ export default {
     outline: none;
     border-radius: 2px;
     font-family: 'AUDIOWIDE';
-    color: #888;
+    color: #999;
     height: 5rem;
     font-size: 1.25rem;
     max-width: 21.8rem;
+    letter-spacing: .2px;
 
     &::placeholder{
-      color: #888;
+      color: #aaa;
     }
   }
 

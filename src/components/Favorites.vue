@@ -5,9 +5,9 @@
       <div class="favorites__loading" >Loading...!</div>
     </div>
     <div v-else>
-      <div class="page__center" v-if="data.length">
+      <div class="page__center" v-if="favorites.length">
         <asteroid 
-          v-for="(asteroid, index) in updatedFavorites" 
+          v-for="(asteroid, index) in favorites" 
           :key="asteroid.id" :asteroid="asteroid" 
           :index="index" 
           liked  />
@@ -23,6 +23,7 @@
 <script>
 import {COLORS} from '@/constants';
 import {emitNavColor} from '@/utils';
+import {auth, favoritesCollection} from '@/firebaseInit';
 
 import Asteroid from '@/components/Asteroid';
 
@@ -33,7 +34,7 @@ export default {
   },
   data(){
     return {
-      updatedFavorites: [],
+      favorites: [],
       isLoading: false,
       unSubscriptions: []
     }
@@ -50,13 +51,15 @@ export default {
   },
   methods : {
     favoritesListener(userId){
+    this.isLoading = true;
       const favoritesUnsbscription = favoritesCollection.where("userId", "==", userId)
         .onSnapshot(favoritesSnapshot => {
-          let updatedFavorites = [];
+          let favorites = [];
           favoritesSnapshot.forEach(doc => {
-            updatedFavorites.push(doc.data().asteroid.id);
+            favorites.push(doc.data().asteroid);
           });
-          this.favorites = updatedFavorites;
+          this.favorites = favorites;
+          this.isLoading = false;
         });
       this.unSubscriptions.push(favoritesUnsbscription);
     }

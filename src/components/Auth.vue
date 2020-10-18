@@ -235,7 +235,7 @@ $color-blue-dark: #3546a1;
     border: 1px solid $color-grey-light-2;
     padding: 1.3rem 1.3rem;
     padding-right: 4.3rem;
-    font-size: 1.4rem;
+    font-size: 1.32rem;
     color: $color-grey-dark-2;
     border-radius: 3px;
     font-family: inherit;

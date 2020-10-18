@@ -1,4 +1,4 @@
-const API_KEY = 'PTBVCqGiwFzHBdtPO2duHxJ1qlQRUwUndA2KwJ7b';
+const API_KEY = process.env.VUE_APP_API_KEY;
 
 export const API = {
   ASTEROIDS: `https://api.nasa.gov/neo/rest/v1/neo/browse?page=0&size=12&api_key=${API_KEY}`,

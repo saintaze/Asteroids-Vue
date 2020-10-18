@@ -13,7 +13,7 @@
 
     <h2 class="search__date-heading">{{data.id}}</h2>
     <div class="find__center">
-      <asteroid :asteroid="data" :index="randomIndex" :liked="isFavoriteId(data.id)"/>
+      <asteroid v-if="Object.keys(data).length" :asteroid="data" :index="randomIndex" :liked="isFavoriteId(data.id)"/>
     </div>
   </div>
 </template>

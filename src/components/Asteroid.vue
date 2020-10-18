@@ -133,7 +133,7 @@ export default {
     background-repeat: no-repeat;
     background-size: cover;
     position: relative;
-    border-radius: 2px 2px 0 0;
+    border-radius: 3px 3px 0 0;
     backface-visibility: hidden;
   }
 

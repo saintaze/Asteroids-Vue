@@ -1,9 +1,10 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+
+import {auth} from '@/firebaseInit';
+
 import AsteriodsList from '@/components/AsteriodsList.vue';
 import SearchAsteriods from '@/components/SearchAsteriods.vue';
-// import Signin from '@/components/Signin.vue';
-// import Signup from '@/components/Signup.vue';
 import Favorites from '@/components/Favorites.vue';
 import FindAsteroid from '@/components/FindAsteroid.vue';
 import Auth from '@/components/Auth.vue';
@@ -31,20 +32,9 @@ const routes = [
     component: FindAsteroid,
     name: 'find'
   },
-  // {
-  //   path: '/signin',
-  //   component: Signin,
-  //   name: 'signin'
-  // },
-  // {
-  //   path: '/signup',
-  //   component: Signup,
-  //   name: 'signup'
-  // },
   {
     path: '/auth',
     redirect: '/auth/signin',
-    name: 'auth',
   },
   {
     path: '/auth/:type',
@@ -71,15 +61,14 @@ const router = new VueRouter({
   routes
 });
 
-
 //route guard
-// router.beforeEach((to, from, next)=>{
-//   if(to.meta.requiresAuth && !auth){
-//     next({name: 'signin'})
-//   }else {
-//     next();
-//   }
-// })
+router.beforeEach((to, from, next)=>{
+  if(to.meta.requiresAuth && !auth.currentUser){
+    next({name: 'auth'});
+  }else {
+    next();
+  }
+})
 
 export default router
 

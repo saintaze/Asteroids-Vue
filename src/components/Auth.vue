@@ -180,7 +180,7 @@ $color-blue-dark: #3546a1;
   // background-color: #9c1dfc;
   // background-color: #ffdb64;
   // background-color: #9031ea;
-  background-color: #ffed64f5;
+  background-color: #ffed64;
 
   &__center {
     height: 40.6rem;

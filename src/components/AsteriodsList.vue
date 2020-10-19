@@ -79,7 +79,8 @@ export default {
 <style lang="scss">
 
 .asteroids {
-  background-color: #fc6035;
+  // background-color: #fc6035;
+  background-color: #fc6035fa;
 
   &__loading-box {
     position: relative;

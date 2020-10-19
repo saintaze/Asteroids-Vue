@@ -70,6 +70,7 @@ export default {
 <style lang="scss">
 .favorites {
   background-color: #35a0fc;
+  // background-color: #309dfc;
 
   &__message {
     margin-top: -3rem;

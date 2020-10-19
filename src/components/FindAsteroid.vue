@@ -122,13 +122,9 @@ export default {
 <style lang="scss">
 
 .find {
-  background-color: #ffdb64;
-  background-color: #6de15f;
-  background-color: #95d973;
-  background-color: #95d973;
-  background-color: #bedb39;
-  
- 
+  // background-color: #6de15f;
+  // background-color: #6de15fed;
+  background-color: #66dc58ed;
 
   &__center {
     max-width: 114rem;
@@ -183,6 +179,7 @@ export default {
     &:hover {
       transition: all .2s;
       background-color: lighten(#555, 7) ;
+      border: 1px solid lighten(#555, 5);
     }
   }
 

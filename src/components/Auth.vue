@@ -4,7 +4,7 @@
       <form class="form" @submit.prevent="formSubmit">
         <div class="form__header">
           <img
-            src="@/assets/s-6.png"
+            src="@/assets/s-4.png"
             alt="logo"
             class="form__logo"
           />
@@ -177,9 +177,9 @@ $color-blue-dark: #3546a1;
 // auth Wrapper
 .auth {
   min-height: calc(100vh - 88px);
-  // background-color: #881dfc;
-  background-color: #9c1dfc;
+  // background-color: #9c1dfc;
   // background-color: #ffdb64;
+  background-color: #9031ea;
 
   &__center {
     height: 40.6rem;
@@ -293,10 +293,11 @@ $color-blue-dark: #3546a1;
     outline: none;
     transition: all 0.2s ease-in-out;
     // background-color: darken(#5aa096, 6);
-    background-color: #334d5cfa;
+    // background-color: #334d5cfa;
+    background-color: #466c6f;
     
     &:hover {
-      background-color: lighten(#334d5cfa, 10);
+      background-color: darken(#466c6f, 4);
     }
   }
 
@@ -331,11 +332,14 @@ $color-blue-dark: #3546a1;
   &__info {
     width: 100%;
     position: absolute;
-    bottom: -9rem;
+    bottom: -8.3rem;
     left: 0;
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 1.26rem;
     color: white;
+    font-style: italic;
+    text-shadow: 0px 1px 2px rgba(0,0,0, .1);
+
   }
 
   &__auth-type{

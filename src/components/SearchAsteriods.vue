@@ -7,7 +7,7 @@
       <input class="search__date-input" type="text" v-model="endDate" placeholder="End Date" @click="markDateInput" @focus="markDateInput">
       <button class="search__btn" @click="getAsteroids">Search</button>
       <div class="search__messages">
-        <div class="search__error">{{errorMessage}}</div>
+        <div class="search__error" v-if="!isLoading && errorMessage">{{errorMessage}}</div>
         <div class="search__loading" v-if="isLoading">Loading...!</div>
       </div>
     </div>
@@ -48,6 +48,7 @@ export default {
       data: {},
       errorMessage: '',
       isLoading: false,
+      isError: false,
       favorites: [],
       unSubscriptions: []
     }
@@ -124,10 +125,12 @@ export default {
 <style lang="scss">
 
 .search {
-  background-color: #fc35a3;
+  // background-color: #fc35a3;
+  background-color: #fc35a3f2;
 
   &__messages {
     position: relative;
+    min-height: 6rem;
   }
 
   &__error, &__loading {
@@ -179,6 +182,7 @@ export default {
     &:hover {
       transition: all .2s;
       background-color: lighten(#555, 7) ;
+      border: 1px solid lighten(#555, 5);
     }
   }
 

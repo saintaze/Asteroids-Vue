@@ -1,4 +1,4 @@
-const API_KEY = process.env.VUE_APP_API_KEY;
+const API_KEY = process.env.VUE_APP_NASA_API_KEY;
 
 export const API = {
   ASTEROIDS: `https://api.nasa.gov/neo/rest/v1/neo/browse?page=0&size=12&api_key=${API_KEY}`,
@@ -7,9 +7,9 @@ export const API = {
 }
 
 export const COLORS = {
-  ASTEROIDS: '#fc6035',
-  SEARCH: '#fc35a3',
-  FIND: '#6de15f',
+  ASTEROIDS: '#fc6035fa',
+  SEARCH: '#fc35a3f2',
+  FIND: '#66dc58ed',
   FAVORITES: '#35a0fc',
-  AUTH: '#ffe11a'
+  AUTH: '#9031ea'
 }

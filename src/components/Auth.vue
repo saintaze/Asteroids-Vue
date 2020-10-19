@@ -60,7 +60,7 @@
 
         <div class="form__auth">
           <span v-if="isSigninForm" class="form__auth-type">
-            New to Explore? 
+            New to Space Quest? 
             <span class="form__auth-type-link" @click="setFormType('signup')">Sign Up</span>
           </span>
           <span v-else class="form__auth-type">
@@ -179,7 +179,8 @@ $color-blue-dark: #3546a1;
   min-height: calc(100vh - 88px);
   // background-color: #9c1dfc;
   // background-color: #ffdb64;
-  background-color: #9031ea;
+  // background-color: #9031ea;
+  background-color: #ffed64f5;
 
   &__center {
     height: 40.6rem;
@@ -336,7 +337,7 @@ $color-blue-dark: #3546a1;
     left: 0;
     text-align: center;
     font-size: 1.26rem;
-    color: white;
+    // color: #f04124;
     font-style: italic;
     text-shadow: 0px 1px 2px rgba(0,0,0, .1);
 

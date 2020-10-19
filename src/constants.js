@@ -11,5 +11,5 @@ export const COLORS = {
   SEARCH: '#fc35a3f2',
   FIND: '#66dc58ed',
   FAVORITES: '#35a0fc',
-  AUTH: '#9031ea'
+  AUTH: '#ffed64f5'
 }

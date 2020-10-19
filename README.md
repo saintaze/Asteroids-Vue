@@ -1,5 +1,5 @@
 # Asteroids-Vue
-An app that displays asteroids and allows users to like and unlike their favorite asteroids.  
+An app that displays near-earth asteroids and allows user to like and unlike his favorite asteroids.  
 
 ### Features
 + Responsive Design
@@ -25,7 +25,7 @@ clone repo
 run `yarn serve`
 
 # Live Version
-#### URL: [Explore Cosmos](https://stack-exchange-angular.ayezahmed.vercel.app/)
+#### URL: [Explore Cosmos](https://asteroid-vue.vercel.app/)
 
 # Author
 Saintaze [@saintaze](https://github.com/saintaze/)

@@ -177,10 +177,9 @@ $color-blue-dark: #3546a1;
 // auth Wrapper
 .auth {
   min-height: calc(100vh - 88px);
-  background-color: #881dfc;
+  // background-color: #881dfc;
   background-color: #9c1dfc;
-  background-color: #ffdb64;
-  background-color: #ffe11a;
+  // background-color: #ffdb64;
 
   &__center {
     height: 40.6rem;

@@ -85,6 +85,19 @@ body {
     line-height: 1;
     text-shadow: 0 1px 1px rgba(0,0,0,0.2);
     word-spacing: 1.2rem;
+
+    @media (max-width: 800px) {
+      margin-bottom: 7rem;
+      padding-top: 2rem;
+      max-width: 33rem;
+      margin: 0 auto 7rem;
+      line-height: 1.1;
+    }
+
+    @media (max-width: 500px) {
+      margin-bottom: 6rem;
+    }
+
   }
 
   &__center {
@@ -94,6 +107,10 @@ body {
     grid-gap: 7rem 4rem;
     margin: 0 auto;
 
+    @media (max-width: 1260px) {
+      grid-gap: 5rem 3rem;
+    }
+
     @media screen and (max-width: 1180px){
       grid-template-columns: repeat(2, 1fr);
       max-width: 75rem;
@@ -102,6 +119,7 @@ body {
     @media screen and (max-width: 800px){
       grid-template-columns: repeat(1, 1fr);
       max-width: 35rem;
+      grid-gap: 4.4rem 3rem;
     }
   }
 }

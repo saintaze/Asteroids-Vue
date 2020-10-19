@@ -80,14 +80,6 @@ export default {
       this.isLoading = state;
     },
     dateIsEmpty(){
-      // if(!this.startDate || !this.endDate || !moment(this.startDate).isValid() || !moment(this.endDate).isValid()){
-      //     this.errorMessage = 'Date is Invalid';
-      //     return false;
-      // }
-      // const validEndDate = moment(this.startDate).add(8, 'days');
-      // const startDateCutoff = moment(this.startDate).subtract(1, 'days');
-      // const isValidEndDate = moment(this.endDate).isBetween(startDateCutoff, validEndDate);
-      // return isValidEndDate;
       if(!this.startDate || !this.endDate) {
           this.errorMessage = 'Enter Date!';
           return true;
@@ -133,7 +125,6 @@ export default {
 
 .search {
   background-color: #fc35a3;
-  // background-color: #fc35b6;
 
   &__messages {
     position: relative;
@@ -147,6 +138,12 @@ export default {
     font-weight: 500;
     font-style: italic;
     text-shadow: 0px 1px 2px rgba(0,0,0, .1);
+  }
+
+  &__error {
+    @media (max-width: 800px) {
+      margin-top: 1.6rem;
+    }
   }
 
   &__loading {
@@ -171,6 +168,14 @@ export default {
     color: white;
     letter-spacing: .2px;
 
+    @media (max-width: 800px) {
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 500px) {
+      margin-top: 1.8rem;
+    }
+
     &:hover {
       transition: all .2s;
       background-color: lighten(#555, 7) ;
@@ -180,6 +185,15 @@ export default {
   &__date-box {
     text-align: center;
     margin: 0 auto;
+
+    @media (max-width: 800px) {
+      max-width: 50rem;
+    }
+
+    @media (max-width: 500px) {
+      max-width: 30rem;
+    }
+
   }
 
   &__date-input {
@@ -197,6 +211,19 @@ export default {
     font-weight: 100;
     letter-spacing: .2px;
 
+    @media (max-width: 800px) {
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+
+    @media (max-width: 500px) {
+      margin-right: 0;
+      &:first-of-type {
+        margin-bottom: 2rem;
+      }
+    }
+
     &::placeholder{
       color: #aaa;
       font-weight: 100;
@@ -208,7 +235,7 @@ export default {
   }
 
   &__date-heading {
-    margin: 5rem 0;     
+    margin: 4rem 0;     
     text-align: center;
     font-family: 'Monoton', cursive;
     color: white;
@@ -217,8 +244,9 @@ export default {
     line-height: 1;
     word-spacing: 1rem;
     text-shadow: 0px 1px 3px rgba(0,0,0, .2);
-    &:first-child{
-      margin-top: 4rem;
+
+    @media (max-width: 800px) {
+      margin: 3rem 0; 
     }
   }
 

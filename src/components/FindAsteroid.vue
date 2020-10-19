@@ -151,6 +151,12 @@ export default {
     text-shadow: 0px 1px 2px rgba(0,0,0, .1);
   }
 
+  &__error {
+    @media (max-width: 500px) {
+      margin-top: 1rem;
+    }
+  }
+
   &__loading {
     position: absolute; 
     top: 50%;
@@ -183,6 +189,9 @@ export default {
   &__box {
     text-align: center;
     margin: 0 auto;
+    @media (max-width: 500px) {
+      max-width: 30rem;
+    }
   }
 
   &__input {
@@ -198,6 +207,11 @@ export default {
     font-size: 1.25rem;
     max-width: 21.8rem;
     letter-spacing: .2px;
+
+    @media (max-width: 500px) {
+      margin-right: 0;
+      margin-bottom: 2rem;
+    }
 
     &::placeholder{
       color: #aaa;

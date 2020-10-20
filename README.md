@@ -25,7 +25,7 @@ clone repo
 run `yarn serve`
 
 # Live Version
-#### URL: [Explore Cosmos](https://asteroid-vue.vercel.app/)
+#### URL: [Explore Cosmos](https://asteroid-vue.ayezahmed.vercel.app)
 
 # Author
 Saintaze [@saintaze](https://github.com/saintaze/)

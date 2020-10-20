@@ -180,7 +180,8 @@ $color-blue-dark: #3546a1;
   // background-color: #9c1dfc;
   // background-color: #ffdb64;
   // background-color: #9031ea;
-  background-color: #ffed64;
+  // background-color: #ffed64;
+  background-color: #962cfa;
 
   &__center {
     height: 40.6rem;
@@ -337,7 +338,7 @@ $color-blue-dark: #3546a1;
     left: 0;
     text-align: center;
     font-size: 1.26rem;
-    // color: #f04124;
+    color: white;
     font-style: italic;
     text-shadow: 0px 1px 2px rgba(0,0,0, .1);
 

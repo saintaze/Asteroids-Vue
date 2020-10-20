@@ -4,7 +4,7 @@ const signup = async ({email, password}) => {
   try {
     const user = await auth.createUserWithEmailAndPassword(email, password);
   } catch (e) {
-    console.log(e);
+   throw e;
   }
 }
 

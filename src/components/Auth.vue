@@ -134,7 +134,7 @@ export default {
           if(this.isSigninForm){
             await fb.signin(this.data);
           }else{
-            fb.signup(this.data);
+            await fb.signup(this.data);
           }
         }catch(e){
           this.error = e; 
@@ -184,7 +184,7 @@ $color-blue-dark: #3546a1;
   background-color: #962cfa;
 
   &__center {
-    height: 40.6rem;
+    height: 40.5rem;
     background-color: white;
     width: 32rem;
     padding: 3rem;
@@ -288,7 +288,7 @@ $color-blue-dark: #3546a1;
     font-size: 1.3rem;
     color: $color-white;
     height: 3.5rem;
-    line-height: 3.5rem;
+    // line-height: 3.5rem;
     padding: 0 1.6rem;
     border: none;
     border-radius: 3.5px;

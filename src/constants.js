@@ -7,7 +7,7 @@ export const API = {
 }
 
 export const COLORS = {
-  ASTEROIDS: '#fc6035fa',
+  ASTEROIDS: ' #fc6035',
   SEARCH: '#fc35a3f2',
   FIND: '#66dc58ed',
   FAVORITES: '#35a0fc',
